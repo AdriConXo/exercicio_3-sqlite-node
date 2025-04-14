@@ -72,6 +72,19 @@ const db = new sqlite3.Database('./chinook.db', (err) => {
       playlist_track
       tracks*/
 
+ const sql6 = `SELECT customers.FirstName || ' ' || customers.LastName AS Cliente,
+ tracks.Name AS Cancion FROM customers
+JOIN invoices ON customers.CustomerId = invoices.CustomerId
+JOIN invoice_items ON invoices.InvoiceId = invoice_items.InvoiceId
+JOIN playlist_track ON invoice_items.TrackId = playlist_track.TrackId
+JOIN tracks ON playlist_track.TrackId = tracks.TrackId
+LIMIT 20;`;
+
+db.all(sql6, [], (err, rows) => {
+  if (err) throw err;
+  console.log('Resultado EXERCICIO 6:');
+  rows.forEach(row => console.log(row));
+});
 
     //==============================EXERCICIO 7 ========================================
     //Cál é a suma das facturas do cliente de londres?. Para isto deberás usar a función sum
@@ -134,7 +147,7 @@ const db = new sqlite3.Database('./chinook.db', (err) => {
 Nesta ocasión deberás utilizar a función ‘max’, onde deberás introducir o campo adecuado*/
 const sql12 = `SELECT customers.FirstName || ' ' || customers.LastName AS Cliente, invoices.Total
 FROM invoices JOIN customers ON invoices.CustomerId = customers.CustomerId
-WHERE invoices.Total = (SELECT MAX(Total) FROM invoices`;
+WHERE invoices.Total = (SELECT MAX(Total) FROM invoices)`;
 db.all(sql12, [], (err, rows) => {
   if (err) throw err;
   console.log ('Resultado EXERCICIO 12:');
