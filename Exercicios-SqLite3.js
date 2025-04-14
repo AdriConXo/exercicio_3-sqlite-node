@@ -77,8 +77,7 @@ const db = new sqlite3.Database('./chinook.db', (err) => {
 JOIN invoices ON customers.CustomerId = invoices.CustomerId
 JOIN invoice_items ON invoices.InvoiceId = invoice_items.InvoiceId
 JOIN playlist_track ON invoice_items.TrackId = playlist_track.TrackId
-JOIN tracks ON playlist_track.TrackId = tracks.TrackId
-LIMIT 20;`;
+JOIN tracks ON playlist_track.TrackId = tracks.TrackId`;
 
 db.all(sql6, [], (err, rows) => {
   if (err) throw err;
