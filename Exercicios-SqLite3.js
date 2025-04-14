@@ -72,8 +72,134 @@ const db = new sqlite3.Database('./chinook.db', (err) => {
       playlist_track
       tracks*/
 
-        
 
-        
-      });
+    //==============================EXERCICIO 7 ========================================
+    //Cál é a suma das facturas do cliente de londres?. Para isto deberás usar a función sum
+    const sql7 = `SELECT SUM (invoices.Total) AS Total Gastado FROM invoices
+    JOIN customers ON invoices.CustomerId = customers.CustomerId
+    WHERE customers.City = 'London'`;
+    db.all(sql7, [], (err, rows) => {
+      if (err) throw err;
+      console.log ('Resultado EXERCICIO 7:');
+      rows.forEach(row => console.log(row));
+    })
+   //==============================EXERCICIO 8 ========================================
+   /*Obtén o número de albums, para isto deberás usar a función ‘count’.
+   A función Count pode traballar para un campo, de tal xeito, que se introduces dito campo,
+    contará o número de veces que sae repetido*/
+    const sql8 = `SELECT COUNT (*) AS TotalAlbums FROM albums`;
+    db.all(sql8, [], (err, rows) => {
+      if (err) throw err;
+      console.log ('Resultado EXERCICIO 8:');
+      rows.forEach(row => console.log(row));
+    });
+
+
+   //==============================EXERCICIO 9 ========================================
+     //Obtén o número de clientes por países de la tabla clientes, ordéao por países. 
+    const sql9 = `SELECT Country, COUNT (*) as NumeoClientes FROM customers
+    GROUP BY Country ORDER BY Country`;
+    db.all(sql9, [], (err, rows) => {
+      if (err) throw err;
+      console.log ('Resultado EXERCICIO 9:');
+      rows.forEach(row => console.log(row))
+    });
+
+   //==============================EXERCICIO 10========================================
+     /*Dime os países que teñan máis de 3 clientes, ordéaos de maneira ascendente e descendente. Utliza a cláusula ‘HAVING’.
+    Esta cláusula traballa a partir dun resultado agrupado, fixádevos na diapositiva de ‘Introducción a sql 1’ nº 15.*/
+    const sql10 = `SELECT Country, COUNT(*) AS NumeroClientes
+    FROM customers GROUP BY Country
+    HAVING COUNT(*) > 3 ORDER BY NumeroClientes ASC;`;
+     db.all(sql10, [], (err, rows) => {
+       if (err) throw err;
+       console.log ('Resultado EXERCICIO 10:');
+       rows.forEach(row => console.log(row))
+     });
+ //==============================EXERCICIO 11========================================
+ //Tipo de media (campo MediaTypeId,Name da tabla ‘media_types’) de la lista de cancións para AC/DC
+    const sql11 = `SELECT DISTINCT media_types.MediaTypeId, media_types.Name
+      FROM tracks JOIN albums ON tracks.AlbumId = albums.AlbumId
+      JOIN artists ON albums.ArtistId = artists.ArtistId
+      JOIN media_types ON tracks.MediaTypeId = media_types.MediaTypeId
+      WHERE artists.Name = 'AC/DC';`;
+     db.all(sql11, [], (err, rows) => {
+       if (err) throw err;
+       console.log ('Resultado EXERCICIO 11:');
+       rows.forEach(row => console.log(row))
+     });
+
+//==============================EXERCICIO 12========================================
+/*Quén é o cliente coa máxima factura?.
+Nesta ocasión deberás utilizar a función ‘max’, onde deberás introducir o campo adecuado*/
+const sql12 = `SELECT customers.FirstName || ' ' || customers.LastName AS Cliente, invoices.Total
+FROM invoices JOIN customers ON invoices.CustomerId = customers.CustomerId
+WHERE invoices.Total = (SELECT MAX(Total) FROM invoices`;
+db.all(sql12, [], (err, rows) => {
+  if (err) throw err;
+  console.log ('Resultado EXERCICIO 12:');
+  rows.forEach(row => console.log(row))
+});
+
+//==============================EXERCICIO 13========================================
+//Suma das facturas por cliente. (lembra usar a función ‘sum’)
+
+const sql13 = `SELECT customers.FirstName || ' ' || customers.LastName AS Cliente,  SUM(invoices.Total) AS TotalGastado
+FROM invoices JOIN customers ON invoices.CustomerId = customers.CustomerId
+GROUP BY customers.CustomerId ORDER BY TotalGastado DESC;`;
+db.all(sql13, [], (err, rows) => {
+  if (err) throw err;
+  console.log ('Resultado EXERCICIO 13:');
+  rows.forEach(row => console.log(row))
+});
+
+//==============================EXERCICIO 14========================================
+//En qué cidades viven os empregados e cantos viven nesas cidades?.
+const sql14 = `SELECT City, COUNT(*) AS NumEmpleados FROM employees 
+GROUP BY City ORDER BY NumEmpleados DESC;`;
+db.all(sql14, [], (err, rows) => {
+  if (err) throw err;
+  console.log ('Resultado EXERCICIO 14:');
+  rows.forEach(row => console.log(row))
+});
+
+
+//==============================EXERCICIO 15========================================
+//Quénes son os artistas que teñen albums?, ordéaos por albums
+const sql15 = `SELECT artists.Name AS Artista, COUNT(albums.AlbumId) AS NumAlbums
+FROM artists
+JOIN albums ON artists.ArtistId = albums.ArtistId
+GROUP BY artists.ArtistId
+ORDER BY NumAlbums DESC ;`;
+db.all(sql15, [], (err, rows) => {
+  if (err) throw err;
+  console.log ('Resultado EXERCICIO 15:');
+  rows.forEach(row => console.log(row))
+});
+
+//==============================EXERCICIO 16========================================
+/* Media das facturas por cliente. Agrúpaos polo id do cliente
+Nesta ocasión deberás usar a función ‘avg’*/
+const sql16 = `SELECT customers.CustomerId, customers.FirstName, customers.LastName, AVG(invoices.Total) AS MediaFactura
+FROM invoices
+JOIN customers ON invoices.CustomerId = customers.CustomerId
+GROUP BY customers.CustomerId
+ORDER BY MediaFactura DESC;`;
+db.all(sql16, [], (err, rows) => {
+  if (err) throw err;
+  console.log ('Resultado EXERCICIO 16:');
+  rows.forEach(row => console.log(row))
+});
+
+
+
+
+
+
+
+
     
+   
+});
+
+
